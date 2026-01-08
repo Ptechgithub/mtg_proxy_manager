@@ -290,7 +290,7 @@ setup_and_run_v1() {
 		echo -e "${GREEN}Using user-provided secret: ${YELLOW}$SECRET${REST}"
 	else
 		if [ "$SECRET_MODE" = "tls" ]; then
-			SECRET=$($INSTALL_PATH_V1 generate-secret tls --cloak-host="$CLOAK_HOST")
+			SECRET=$($INSTALL_PATH_V1 generate-secret tls -cloak-host="$CLOAK_HOST")
 			echo -e "${GREEN}Generated secret (tls, cloak-host=$CLOAK_HOST): ${YELLOW}$SECRET${REST}"
 		else
 			SECRET=$($INSTALL_PATH_V1 generate-secret "$SECRET_MODE")
