@@ -252,7 +252,7 @@ setup_and_run_v1() {
 		exit 1
 	fi
 
-	DEFAULT_IP=$(curl -s https://ipinfo.io/ip)
+	DEFAULT_IP=$(curl -s https://api.ipify.org)
 	echo -en "${CYAN}Enter IPv4 [default $DEFAULT_IP]: ${REST}"
 	read -r PUBLIC_IP
 	PUBLIC_IP=${PUBLIC_IP:-$DEFAULT_IP}
