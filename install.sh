@@ -275,6 +275,13 @@ setup_and_run_v1() {
 	*) SECRET_MODE="simple" ;;
 	esac
 
+	CLOAK_HOST=""
+	if [ "$SECRET_MODE" = "tls" ]; then
+		echo -en "${CYAN}Enter TLS cloak-host [default google.com]: ${REST}"
+		read -r CLOAK_HOST
+		CLOAK_HOST=${CLOAK_HOST:-google.com}
+	fi
+
 	echo -en "${CYAN}Enter Secret (optional – press Enter to auto-generate): ${REST}"
 	read -r USER_SECRET
 
@@ -282,8 +289,13 @@ setup_and_run_v1() {
 		SECRET="$USER_SECRET"
 		echo -e "${GREEN}Using user-provided secret: ${YELLOW}$SECRET${REST}"
 	else
-		SECRET=$($INSTALL_PATH_V1 generate-secret "$SECRET_MODE")
-		echo -e "${GREEN}Generated secret ($SECRET_MODE): ${YELLOW}$SECRET${REST}"
+		if [ "$SECRET_MODE" = "tls" ]; then
+			SECRET=$($INSTALL_PATH_V1 generate-secret tls --cloak-host="$CLOAK_HOST")
+			echo -e "${GREEN}Generated secret (tls, cloak-host=$CLOAK_HOST): ${YELLOW}$SECRET${REST}"
+		else
+			SECRET=$($INSTALL_PATH_V1 generate-secret "$SECRET_MODE")
+			echo -e "${GREEN}Generated secret ($SECRET_MODE): ${YELLOW}$SECRET${REST}"
+		fi
 	fi
 
 	TAG=""
@@ -302,6 +314,7 @@ PUBLIC_IP=${PUBLIC_IP}
 SECRET=${SECRET}
 TAG=${TAG}
 SECRET_MODE=${SECRET_MODE}
+CLOAK_HOST=${CLOAK_HOST}
 EOL
 	chmod 600 "$PROXY_INFO_FILE"
 
